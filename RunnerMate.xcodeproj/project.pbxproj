@@ -16,6 +16,8 @@
 		CB5249B0265B2DB20082749B /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249AF265B2DB20082749B /* Runner.swift */; };
 		CB5249B2265B3D5C0082749B /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249B1265B3D5C0082749B /* MapView.swift */; };
 		CB5249B5265B3E7A0082749B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249B4265B3E7A0082749B /* Extensions.swift */; };
+		CB5249B9265B447C0082749B /* MapControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249B8265B447C0082749B /* MapControlView.swift */; };
+		CB5249BB265B45450082749B /* MapControlButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249BA265B45450082749B /* MapControlButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +32,8 @@
 		CB5249AF265B2DB20082749B /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
 		CB5249B1265B3D5C0082749B /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		CB5249B4265B3E7A0082749B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		CB5249B8265B447C0082749B /* MapControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControlView.swift; sourceTree = "<group>"; };
+		CB5249BA265B45450082749B /* MapControlButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapControlButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +93,8 @@
 			isa = PBXGroup;
 			children = (
 				CB5249B1265B3D5C0082749B /* MapView.swift */,
+				CB5249B8265B447C0082749B /* MapControlView.swift */,
+				CB5249BA265B45450082749B /* MapControlButton.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -186,9 +192,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB5249B9265B447C0082749B /* MapControlView.swift in Sources */,
 				CB52499C265B2BEE0082749B /* MapVC.swift in Sources */,
 				CB5249B5265B3E7A0082749B /* Extensions.swift in Sources */,
 				CB5249B0265B2DB20082749B /* Runner.swift in Sources */,
+				CB5249BB265B45450082749B /* MapControlButton.swift in Sources */,
 				CB5249B2265B3D5C0082749B /* MapView.swift in Sources */,
 				CB524998265B2BEE0082749B /* AppDelegate.swift in Sources */,
 				CB52499A265B2BEE0082749B /* SceneDelegate.swift in Sources */,

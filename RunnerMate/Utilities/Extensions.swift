@@ -45,4 +45,11 @@ extension UIView {
             heightAnchor.constraint(equalToConstant: height).isActive = true
         }
     }
+    
+    func addRoundedCornerAndShadow()  {
+        layer.cornerRadius = 20
+        layer.shadowOpacity = 0.4
+        layer.shadowColor = UIColor.black.cgColor
+    }
+    
 }

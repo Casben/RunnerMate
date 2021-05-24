@@ -12,6 +12,7 @@ class MapView: UIView {
 
     let mapView = MKMapView()
     
+    
     init() {
         super.init(frame: .zero)
         configure()
@@ -30,6 +31,8 @@ class MapView: UIView {
         
         mapView.anchor(top: topAnchor, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor)
         mapView.layer.cornerRadius = 20
+        
+        
     }
     
 }
