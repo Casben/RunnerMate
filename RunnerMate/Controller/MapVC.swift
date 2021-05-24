@@ -11,7 +11,7 @@ import MapKit
 class MapVC: UIViewController {
     
     let mapView = MapView()
-    let controlButtons = MapControlView()
+    let controlButtons = RunControlView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,10 +22,10 @@ class MapVC: UIViewController {
     func configure() {
         view.backgroundColor = .systemBackground
         view.addSubview(mapView)
-        mapView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 20, paddingRight: 20, width: 400, height: 525)
+        mapView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 25, paddingLeft: 20, paddingRight: 20, width: 400, height: 475)
         
         view.addSubview(controlButtons)
-        controlButtons.anchor(top: mapView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: mapView.frame.width, height: 125)
+        controlButtons.anchor(top: mapView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 20, paddingLeft: 20, paddingRight: 20, width: mapView.frame.width, height: 200)
     }
 }
 

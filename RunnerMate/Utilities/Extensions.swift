@@ -46,6 +46,12 @@ extension UIView {
         }
     }
     
+    func setDimensions(height: CGFloat, width: CGFloat) {
+        translatesAutoresizingMaskIntoConstraints = false
+        heightAnchor.constraint(equalToConstant: height).isActive = true
+        widthAnchor.constraint(equalToConstant: width).isActive = true
+    }
+    
     func addRoundedCornerAndShadow()  {
         layer.cornerRadius = 20
         layer.shadowOpacity = 0.4

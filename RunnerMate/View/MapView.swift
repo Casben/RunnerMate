@@ -23,9 +23,7 @@ class MapView: UIView {
     }
     
     private func configure() {
-        layer.shadowRadius = 10
-        layer.shadowOpacity = 0.4
-        layer.shadowColor = UIColor.black.cgColor
+        addRoundedCornerAndShadow()
         
         addSubview(mapView)
         
