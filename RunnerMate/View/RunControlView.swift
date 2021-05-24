@@ -11,9 +11,17 @@ class RunControlView: UIView {
     
     let startButton: UIButton = {
         let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(red: <#T##CGFloat#>, green: <#T##CGFloat#>, blue: <#T##CGFloat#>, alpha: <#T##CGFloat#>)
-        button.addRoundedCornerAndShadow()
-        button.setTitle("Begin your run", for: .normal)
+        button.backgroundColor = UIColor(red: 115 / 255, green: 133 / 255, blue: 84 / 255, alpha: 1)
+//        button.addRoundedCornerAndShadow()
+        button.layer.cornerRadius = 20
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(systemName: "figure.walk")?.withTintColor(.white, renderingMode: .alwaysTemplate)
+        
+        let attributedText = NSMutableAttributedString(string: "Begin your run ")
+        attributedText.append(NSAttributedString(attachment: attachment))
+        
+        button.setAttributedTitle(attributedText, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         return button
     }()
     
@@ -29,10 +37,10 @@ class RunControlView: UIView {
     
     private func configure() {
         addRoundedCornerAndShadow()
-        backgroundColor = .systemBackground
-        
+        backgroundColor = UIColor(white: 1, alpha: 1)
+        alpha = 0.75
         addSubview(startButton)
-        startButton.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8, paddingLeft: 8, paddingRight: 8, height: 60)
+        startButton.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor,  paddingLeft: 8, paddingBottom: 20, paddingRight: 8, height: 60)
         
     }
     
