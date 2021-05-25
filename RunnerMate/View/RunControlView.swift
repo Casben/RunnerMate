@@ -9,18 +9,8 @@ import UIKit
 
 class RunControlView: UIView {
     
-    let startButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.backgroundColor = UIColor(red: 115 / 255, green: 133 / 255, blue: 84 / 255, alpha: 1)
-        button.layer.cornerRadius = 20
-        let attachment = NSTextAttachment()
-        attachment.image = UIImage(systemName: "figure.walk")?.withTintColor(.white, renderingMode: .alwaysTemplate)
-        
-        let attributedText = NSMutableAttributedString(string: "Begin your run ")
-        attributedText.append(NSAttributedString(attachment: attachment))
-        
-        button.setAttributedTitle(attributedText, for: .normal)
-        button.setTitleColor(.white, for: .normal)
+    let startButton: StartButton = {
+        let button = StartButton(type: .system)
         button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
         return button
     }()
@@ -62,11 +52,11 @@ class RunControlView: UIView {
         if timerCounting {
             timerCounting = false
             timer.invalidate()
+            startButton.isInStartingPosition = true
         } else {
             timerCounting = true
             timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
-            startButton.setAttributedTitle(nil, for: .normal)
-            startButton.setTitle("STOP", for: .normal)
+            startButton.isInStartingPosition = false
         }
     }
     
