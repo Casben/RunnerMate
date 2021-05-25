@@ -8,16 +8,24 @@
 import UIKit
 
 class StartButton: UIButton {
-    
-    private let attributedTextAttachment: NSTextAttachment = {
+
+    private let startText: NSMutableAttributedString = {
         let attachment = NSTextAttachment()
         attachment.image = UIImage(systemName: "figure.walk")?.withTintColor(.white, renderingMode: .alwaysTemplate)
-        return attachment
+        
+        let attributedText = NSMutableAttributedString(string: "Begin your run ")
+        attributedText.append(NSAttributedString(attachment: attachment))
+        
+        return attributedText
     }()
     
-    private lazy var attributedStartText: NSMutableAttributedString = {
-        let attributedText = NSMutableAttributedString(string: "Begin your run ")
-        attributedText.append(NSAttributedString(attachment: attributedTextAttachment))
+    private let endText: NSMutableAttributedString = {
+        let attachment = NSTextAttachment()
+        attachment.image = UIImage(systemName: "stopwatch")?.withTintColor(.white, renderingMode: .alwaysTemplate)
+        
+        let attributedText = NSMutableAttributedString(string: "STOP ")
+        attributedText.append(NSAttributedString(attachment: attachment))
+        
         return attributedText
     }()
     
@@ -52,14 +60,13 @@ class StartButton: UIButton {
     
     private func setStartText() {
         backgroundColor = startButtonColor
-        setAttributedTitle(attributedStartText, for: .normal)
+        setAttributedTitle(startText, for: .normal)
         setTitleColor(.white, for: .normal)
     }
     
     private func setStopText() {
         backgroundColor = endButtonColor
-        setAttributedTitle(nil, for: .normal)
-        setTitle("STOP", for: .normal)
+        setAttributedTitle(endText, for: .normal)
     }
     
 }

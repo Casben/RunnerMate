@@ -63,4 +63,8 @@ extension UIView {
         layer.shadowColor = UIColor.black.cgColor
     }
     
+    func addSubviews(_ views: UIView...) {
+        _ = views.map { self.addSubview($0) }
+    }
+    
 }

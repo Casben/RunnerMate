@@ -18,6 +18,7 @@
 		CB5249B5265B3E7A0082749B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249B4265B3E7A0082749B /* Extensions.swift */; };
 		CB5249B9265B447C0082749B /* RunControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249B8265B447C0082749B /* RunControlView.swift */; };
 		CB5249BD265C945E0082749B /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249BC265C945E0082749B /* StartButton.swift */; };
+		CB5249C3265CAA8C0082749B /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249C2265CAA8C0082749B /* TimerViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		CB5249B4265B3E7A0082749B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		CB5249B8265B447C0082749B /* RunControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunControlView.swift; sourceTree = "<group>"; };
 		CB5249BC265C945E0082749B /* StartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
+		CB5249C2265CAA8C0082749B /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				CB5249AF265B2DB20082749B /* Runner.swift */,
+				CB5249C2265CAA8C0082749B /* TimerViewModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -193,6 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB5249B9265B447C0082749B /* RunControlView.swift in Sources */,
+				CB5249C3265CAA8C0082749B /* TimerViewModel.swift in Sources */,
 				CB52499C265B2BEE0082749B /* MapVC.swift in Sources */,
 				CB5249B5265B3E7A0082749B /* Extensions.swift in Sources */,
 				CB5249B0265B2DB20082749B /* Runner.swift in Sources */,

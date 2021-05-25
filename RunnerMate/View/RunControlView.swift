@@ -15,15 +15,17 @@ class RunControlView: UIView {
         return button
     }()
     
-    var timer = Timer()
-    var count = 0
-    var timerCounting = false
-    
     let timerLabel: UILabel = {
        let label = UILabel()
         label.text = "00 : 00 : 00"
         return label
     }()
+    
+    var timerViewModel = TimerViewModel()
+    
+    var timer = Timer()
+    var count = 0
+    var timerCounting = false
     
 
     init() {
@@ -39,10 +41,11 @@ class RunControlView: UIView {
         addRoundedCornerAndShadow()
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
-        addSubview(startButton)
+        
+        addSubviews(startButton, timerLabel)
+        
         startButton.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor,  paddingLeft: 8, paddingBottom: 10, paddingRight: 8, height: 60)
         
-        addSubview(timerLabel)
         timerLabel.centerX(inView: self)
         timerLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
         
@@ -62,27 +65,11 @@ class RunControlView: UIView {
     
     @objc func updateTimerLabel() {
         count += 1
-        let time = secondsToHoursMinutesSeconds(seconds: count)
-        let timeString = makeTimeString(hours: time.0, minutes: time.1, seconds: time.2)
-        
-        timerLabel.text = timeString
+        timerViewModel.secondsToHoursMinutesSeconds(seconds: count)
+        timerLabel.text = timerViewModel.timeString
         
     }
     
-    func secondsToHoursMinutesSeconds(seconds: Int) -> (Int, Int, Int) {
-        return ((seconds / 3600), ((seconds % 3600) / 60), ((seconds % 3600) % 60))
-    }
     
-    
-    func makeTimeString(hours: Int, minutes: Int, seconds: Int) -> String {
-        var timeString = ""
-        timeString += String(format: "%02d", hours)
-        timeString += " : "
-        timeString += String(format: "%02d", minutes)
-        timeString += " : "
-        timeString += String(format: "%02d", seconds)
-        
-        return timeString
-    }
     
 }
