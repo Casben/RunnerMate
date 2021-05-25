@@ -52,6 +52,11 @@ extension UIView {
         widthAnchor.constraint(equalToConstant: width).isActive = true
     }
     
+    func centerX(inView view: UIView) {
+        translatesAutoresizingMaskIntoConstraints = false
+        centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+    }
+    
     func addRoundedCornerAndShadow()  {
         layer.cornerRadius = 20
         layer.shadowOpacity = 0.4
