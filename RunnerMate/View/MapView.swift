@@ -12,7 +12,6 @@ class MapView: UIView {
 
     let mapView = MKMapView()
     
-    
     init() {
         super.init(frame: .zero)
         configure()

@@ -23,9 +23,7 @@ class RunControlView: UIView {
     
     var timerViewModel = TimerViewModel()
     
-    var timer = Timer()
-    var count = 0
-    var timerCounting = false
+    
     
 
     init() {
@@ -52,20 +50,20 @@ class RunControlView: UIView {
     }
     
     @objc private func startButtonTapped() {
-        if timerCounting {
-            timerCounting = false
-            timer.invalidate()
+        if timerViewModel.timerCounting {
+            timerViewModel.timerCounting = false
+            timerViewModel.timer.invalidate()
             startButton.isInStartingPosition = true
         } else {
-            timerCounting = true
-            timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            timerViewModel.timerCounting = true
+            timerViewModel.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
             startButton.isInStartingPosition = false
         }
     }
     
     @objc func updateTimerLabel() {
-        count += 1
-        timerViewModel.secondsToHoursMinutesSeconds(seconds: count)
+        timerViewModel.count += 1
+        timerViewModel.secondsToHoursMinutesSeconds()
         timerLabel.text = timerViewModel.timeString
         
     }

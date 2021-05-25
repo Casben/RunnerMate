@@ -13,7 +13,7 @@ class StartButton: UIButton {
         let attachment = NSTextAttachment()
         attachment.image = UIImage(systemName: "figure.walk")?.withTintColor(.white, renderingMode: .alwaysTemplate)
         
-        let attributedText = NSMutableAttributedString(string: "Begin your run ")
+        let attributedText = NSMutableAttributedString(string: "Start your run ")
         attributedText.append(NSAttributedString(attachment: attachment))
         
         return attributedText

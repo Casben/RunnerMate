@@ -19,8 +19,12 @@ struct TimerViewModel {
     
     var timeString: String = ""
     
-    mutating func secondsToHoursMinutesSeconds(seconds: Int) {
-        time = ((seconds / 3600), ((seconds % 3600) / 60), ((seconds % 3600) % 60))
+    var timer = Timer()
+    var count = 0
+    var timerCounting = false
+    
+    mutating func secondsToHoursMinutesSeconds() {
+        time = ((count / 3600), ((count % 3600) / 60), ((count % 3600) % 60))
     }
     
     mutating func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
