@@ -34,9 +34,10 @@ class TimerViewModel {
         let hours = Int(trimmedString[0...1])!
         let mintues = Int(trimmedString[2...3])!
         let seconds = Int(trimmedString[4...5])!
-        
+        let compressedCount = time.0 + time.1 + time.2
+    
         time = (hours, mintues, seconds)
-        print(time)
+        count = compressedCount
     }
     
     func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
@@ -55,7 +56,6 @@ class TimerViewModel {
     func loadTimerString() {
         guard let storedString = userDefaults.string(forKey: "timeString") else { return }
         timeString = storedString
-        
         restoreTime(with: storedString)
     }
     
