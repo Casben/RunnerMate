@@ -16,16 +16,15 @@ class RunControlView: UIView {
     }()
     
     let timerLabel: UILabel = {
-       let label = UILabel()
-        label.text = "00 : 00 : 00"
+        let label = UILabel()
+        if let storedTime = TimerViewModel.shared.confiugreTimerLabelWithStoredTime() {
+            label.text = storedTime
+        } else {
+            label.text = "00 : 00 : 00"
+        }
         return label
     }()
     
-    var timerViewModel = TimerViewModel()
-    
-    
-    
-
     init() {
         super.init(frame: .zero)
         configure()
@@ -49,22 +48,23 @@ class RunControlView: UIView {
         
     }
     
+    
     @objc private func startButtonTapped() {
-        if timerViewModel.timerCounting {
-            timerViewModel.timerCounting = false
-            timerViewModel.timer.invalidate()
+        if TimerViewModel.shared.timerIsRunning {
+            TimerViewModel.shared.timerIsRunning = false
+            TimerViewModel.shared.timer.invalidate()
             startButton.isInStartingPosition = true
         } else {
-            timerViewModel.timerCounting = true
-            timerViewModel.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            TimerViewModel.shared.timerIsRunning = true
+            TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
             startButton.isInStartingPosition = false
         }
     }
     
-    @objc func updateTimerLabel() {
-        timerViewModel.count += 1
-        timerViewModel.secondsToHoursMinutesSeconds()
-        timerLabel.text = timerViewModel.timeString
+    @objc private func updateTimerLabel() {
+        TimerViewModel.shared.count += 1
+        TimerViewModel.shared.secondsToHoursMinutesSeconds()
+        timerLabel.text = TimerViewModel.shared.timeString
         
     }
     

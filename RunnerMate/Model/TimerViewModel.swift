@@ -9,7 +9,10 @@ import Foundation
 
 typealias Time = (Int, Int, Int)
 
-struct TimerViewModel {
+class TimerViewModel {
+    
+    static let shared = TimerViewModel()
+    let userDefaults = UserDefaults.standard
     
     var time: Time = (0, 0, 0) {
         didSet {
@@ -17,22 +20,47 @@ struct TimerViewModel {
         }
     }
     
-    var timeString: String = ""
-    
     var timer = Timer()
+    var timeString: String = ""
     var count = 0
-    var timerCounting = false
+    var timerIsRunning = false
     
-    mutating func secondsToHoursMinutesSeconds() {
+    func secondsToHoursMinutesSeconds() {
         time = ((count / 3600), ((count % 3600) / 60), ((count % 3600) % 60))
     }
     
-    mutating func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
+    private func restoreTime(with storedString: String) {
+        let trimmedString = storedString.replacingOccurrences(of: " : ", with: "")
+        let hours = Int(trimmedString[0...1])!
+        let mintues = Int(trimmedString[2...3])!
+        let seconds = Int(trimmedString[4...5])!
+        
+        time = (hours, mintues, seconds)
+        print(time)
+    }
+    
+    func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
         timeString = ""
         timeString += String(format: "%02d", hours)
         timeString += " : "
         timeString += String(format: "%02d", minutes)
         timeString += " : "
         timeString += String(format: "%02d", seconds)
+    }
+    
+    func saveTimerString() {
+        userDefaults.setValue(timeString, forKey: "timeString")
+    }
+    
+    func loadTimerString() {
+        guard let storedString = userDefaults.string(forKey: "timeString") else { return }
+        timeString = storedString
+        
+        restoreTime(with: storedString)
+    }
+    
+    func confiugreTimerLabelWithStoredTime() -> String? {
+        guard let storedTime = userDefaults.string(forKey: "timeString") else { return nil }
+        return storedTime
     }
 }

@@ -19,7 +19,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = MapVC()
         window?.makeKeyAndVisible()
     }
+    
 
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        TimerViewModel.shared.loadTimerString()
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        TimerViewModel.shared.saveTimerString()
+    }
+    
+    func sceneDidDisconnect(_ scene: UIScene) {
+        TimerViewModel.shared.saveTimerString()
+    }
+    
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        TimerViewModel.shared.loadTimerString()
+    }
 
 }
 
