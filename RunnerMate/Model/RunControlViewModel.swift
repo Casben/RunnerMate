@@ -83,15 +83,4 @@ class RunControlViewModel {
         count += timePassed
         secondsToHoursMinutesSeconds()
     }
-    
-    func reset() {
-        time = (0, 0, 0)
-        count = 0
-        startTime = nil
-        ellapsedTime = 0
-        timer.invalidate()
-        timerIsRunning = false
-        
-        userDefaults.removeObject(forKey: "timeString")
-    }
 }

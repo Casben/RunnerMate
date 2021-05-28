@@ -54,8 +54,6 @@ class RunControlView: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWasTerminated), name: UIApplication.willTerminateNotification, object: nil)
     }
     
     
@@ -98,11 +96,6 @@ class RunControlView: UIView {
             RunControlViewModel.shared.ellapsedTime = Date().timeIntervalSince(RunControlViewModel.shared.startTime!)
             RunControlViewModel.shared.timerIsRunning = true
         }
-    }
-    
-    @objc func applicationWasTerminated() {
-        RunControlViewModel.shared.reset()
-        startButton.isInStartingPosition = true
     }
     
 }
