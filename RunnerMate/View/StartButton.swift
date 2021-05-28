@@ -36,9 +36,9 @@ class StartButton: UIButton {
         didSet {
             switch isInStartingPosition {
             case true:
-                setStartText()
+                setStartPosition()
             case false:
-                setStopText()
+                setStopPosition()
             }
         }
     }
@@ -55,16 +55,16 @@ class StartButton: UIButton {
     
     private func configure() {
         layer.cornerRadius = 20
-        setStartText()
+        setStartPosition()
     }
     
-    private func setStartText() {
+    private func setStartPosition() {
         backgroundColor = startButtonColor
         setAttributedTitle(startText, for: .normal)
         setTitleColor(.white, for: .normal)
     }
     
-    private func setStopText() {
+    private func setStopPosition() {
         backgroundColor = endButtonColor
         setAttributedTitle(endText, for: .normal)
     }
