@@ -79,11 +79,7 @@ class RunControlView: UIView {
         if !TimerViewModel.shared.timerIsRunning {
             TimerViewModel.shared.timer.invalidate()
             TimerViewModel.shared.ellapsedTime = 0
-            
-            
             TimerViewModel.shared.timerIsRunning = false
-            
-            
         }
     }
     
@@ -91,7 +87,9 @@ class RunControlView: UIView {
         if TimerViewModel.shared.timerIsRunning {
             TimerViewModel.shared.ellapsedTime = 0
             TimerViewModel.shared.count = 0
+            
             TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            
             TimerViewModel.shared.ellapsedTime = Date().timeIntervalSince(TimerViewModel.shared.startTime!)
             TimerViewModel.shared.timerIsRunning = true
         }
@@ -101,7 +99,6 @@ class RunControlView: UIView {
 
 extension RunControlView: TimerViewlModelDelegate {
     func notifyTimeHasBeenRestored() {
-        print("delegate called")
         timerLabel.text = TimerViewModel.shared.timeString
     }
 }

@@ -83,11 +83,7 @@ class TimerViewModel {
     
     func convertTimeInterval() {
         let timePassed = abs(Int(ellapsedTime))
-        print("count before \(count)")
-        print("time passed is \(timePassed)")
         count += timePassed
-        print("count after \(count)")
-        print(time)
         secondsToHoursMinutesSeconds()
     }
 }
