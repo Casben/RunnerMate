@@ -32,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        TimerViewModel.shared.timer.invalidate()
+        RunControlViewModel.shared.timer.invalidate()
     }
 
 }

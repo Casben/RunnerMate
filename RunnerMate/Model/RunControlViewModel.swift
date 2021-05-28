@@ -9,13 +9,13 @@ import Foundation
 
 typealias Time = (Int, Int, Int)
 
-protocol TimerViewlModelDelegate: AnyObject {
+protocol RunControlViewDelegate: AnyObject {
     func notifyTimeHasBeenRestored()
 }
 
-class TimerViewModel {
+class RunControlViewModel {
     
-    static let shared = TimerViewModel()
+    static let shared = RunControlViewModel()
     let userDefaults = UserDefaults.standard
     
     var time: Time = (0, 0, 0) {
@@ -37,7 +37,7 @@ class TimerViewModel {
         }
     }
     
-    weak var delegate: TimerViewlModelDelegate?
+    weak var delegate: RunControlViewDelegate?
     
     func secondsToHoursMinutesSeconds() {
         time = ((count / 3600), ((count % 3600) / 60), ((count % 3600) % 60))
@@ -52,9 +52,6 @@ class TimerViewModel {
         count = ((hours * 3600) + ((mintues * 3600) / 60) + seconds)
         secondsToHoursMinutesSeconds()
         delegate?.notifyTimeHasBeenRestored()
-        print("time is \(time)")
-        print("count is \(count)")
-        
     }
     
     func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
@@ -85,5 +82,16 @@ class TimerViewModel {
         let timePassed = abs(Int(ellapsedTime))
         count += timePassed
         secondsToHoursMinutesSeconds()
+    }
+    
+    func reset() {
+        time = (0, 0, 0)
+        count = 0
+        startTime = nil
+        ellapsedTime = 0
+        timer.invalidate()
+        timerIsRunning = false
+        
+        userDefaults.removeObject(forKey: "timeString")
     }
 }

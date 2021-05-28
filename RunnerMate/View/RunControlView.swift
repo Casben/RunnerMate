@@ -17,7 +17,7 @@ class RunControlView: UIView {
     
     let timerLabel: UILabel = {
         let label = UILabel()
-        if let storedTime = TimerViewModel.shared.confiugreTimerLabelWithStoredTime() {
+        if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime() {
             label.text = storedTime
         } else {
             label.text = "00 : 00 : 00"
@@ -35,7 +35,7 @@ class RunControlView: UIView {
     }
     
     private func configure() {
-        TimerViewModel.shared.delegate = self
+        RunControlViewModel.shared.delegate = self
         addRoundedCornerAndShadow()
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
@@ -47,58 +47,68 @@ class RunControlView: UIView {
         timerLabel.centerX(inView: self)
         timerLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
         
+        configureNotificationObservers()
+    }
+    
+    func configureNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWasTerminated), name: UIApplication.willTerminateNotification, object: nil)
     }
     
     
     @objc private func startButtonTapped() {
-        if TimerViewModel.shared.timerIsRunning {
-            TimerViewModel.shared.timerIsRunning = false
-            TimerViewModel.shared.timer.invalidate()
+        if RunControlViewModel.shared.timerIsRunning {
+            RunControlViewModel.shared.timerIsRunning = false
+            RunControlViewModel.shared.timer.invalidate()
             startButton.isInStartingPosition = true
         } else {
-            TimerViewModel.shared.timerIsRunning = true
-            TimerViewModel.shared.startTime = Date()
-            TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
-            TimerViewModel.shared.loadTimeData()
+            RunControlViewModel.shared.timerIsRunning = true
+            RunControlViewModel.shared.startTime = Date()
+            RunControlViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            RunControlViewModel.shared.loadTimeData()
             startButton.isInStartingPosition = false
         }
     }
     
     @objc private func updateTimerLabel() {
-        TimerViewModel.shared.count += 1
-        TimerViewModel.shared.secondsToHoursMinutesSeconds()
-        timerLabel.text = TimerViewModel.shared.timeString
+        RunControlViewModel.shared.count += 1
+        RunControlViewModel.shared.secondsToHoursMinutesSeconds()
+        timerLabel.text = RunControlViewModel.shared.timeString
         
     }
     
     @objc func applicationDidenterBackground(_ notification: Notification) {
-        if !TimerViewModel.shared.timerIsRunning {
-            TimerViewModel.shared.timer.invalidate()
-            TimerViewModel.shared.ellapsedTime = 0
-            TimerViewModel.shared.timerIsRunning = false
+        if !RunControlViewModel.shared.timerIsRunning {
+            RunControlViewModel.shared.timer.invalidate()
+            RunControlViewModel.shared.ellapsedTime = 0
+            RunControlViewModel.shared.timerIsRunning = false
         }
     }
     
     @objc func applicationDidBecomeActive(_ notification: Notification) {
-        if TimerViewModel.shared.timerIsRunning {
-            TimerViewModel.shared.ellapsedTime = 0
-            TimerViewModel.shared.count = 0
+        if RunControlViewModel.shared.timerIsRunning {
+            RunControlViewModel.shared.ellapsedTime = 0
+            RunControlViewModel.shared.count = 0
             
-            TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            RunControlViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
             
-            TimerViewModel.shared.ellapsedTime = Date().timeIntervalSince(TimerViewModel.shared.startTime!)
-            TimerViewModel.shared.timerIsRunning = true
+            RunControlViewModel.shared.ellapsedTime = Date().timeIntervalSince(RunControlViewModel.shared.startTime!)
+            RunControlViewModel.shared.timerIsRunning = true
         }
+    }
+    
+    @objc func applicationWasTerminated() {
+        RunControlViewModel.shared.reset()
+        startButton.isInStartingPosition = true
     }
     
 }
 
-extension RunControlView: TimerViewlModelDelegate {
+extension RunControlView: RunControlViewDelegate {
     func notifyTimeHasBeenRestored() {
-        timerLabel.text = TimerViewModel.shared.timeString
+        timerLabel.text = RunControlViewModel.shared.timeString
     }
 }
