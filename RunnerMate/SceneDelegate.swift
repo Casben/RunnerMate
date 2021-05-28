@@ -25,7 +25,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         TimerViewModel.shared.loadTimerString()
     }
     
+    func sceneWillResignActive(_ scene: UIScene) {
+        TimerViewModel.shared.timer.invalidate()
+        TimerViewModel.shared.saveTimerString()
+    }
+    
+    
     func sceneDidEnterBackground(_ scene: UIScene) {
+        TimerViewModel.shared.timer.invalidate()
         TimerViewModel.shared.saveTimerString()
     }
     
@@ -36,6 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         TimerViewModel.shared.loadTimerString()
     }
+    
 
 }
 

@@ -9,6 +9,10 @@ import Foundation
 
 typealias Time = (Int, Int, Int)
 
+protocol TimerViewlModelDelegate: AnyObject {
+    func notifyTimeHasBeenRestored()
+}
+
 class TimerViewModel {
     
     static let shared = TimerViewModel()
@@ -21,9 +25,19 @@ class TimerViewModel {
     }
     
     var timer = Timer()
-    var timeString: String = ""
     var count = 0
+    
+    var timeString: String = ""
     var timerIsRunning = false
+    
+    var startTime: Date?
+    var ellapsedTime: TimeInterval = 0  {
+        didSet {
+            convertTimeInterval()
+        }
+    }
+    
+    weak var delegate: TimerViewlModelDelegate?
     
     func secondsToHoursMinutesSeconds() {
         time = ((count / 3600), ((count % 3600) / 60), ((count % 3600) % 60))
@@ -34,10 +48,13 @@ class TimerViewModel {
         let hours = Int(trimmedString[0...1])!
         let mintues = Int(trimmedString[2...3])!
         let seconds = Int(trimmedString[4...5])!
-        let compressedCount = time.0 + time.1 + time.2
-    
-        time = (hours, mintues, seconds)
-        count = compressedCount
+        
+        count = ((hours * 3600) + ((mintues * 3600) / 60) + seconds)
+        secondsToHoursMinutesSeconds()
+        delegate?.notifyTimeHasBeenRestored()
+        print("time is \(time)")
+        print("count is \(count)")
+        
     }
     
     func makeTimeString(hours: Int, minutes: Int, seconds: Int) {
@@ -62,5 +79,15 @@ class TimerViewModel {
     func confiugreTimerLabelWithStoredTime() -> String? {
         guard let storedTime = userDefaults.string(forKey: "timeString") else { return nil }
         return storedTime
+    }
+    
+    func convertTimeInterval() {
+        let timePassed = abs(Int(ellapsedTime))
+        print("count before \(count)")
+        print("time passed is \(timePassed)")
+        count += timePassed
+        print("count after \(count)")
+        print(time)
+        secondsToHoursMinutesSeconds()
     }
 }

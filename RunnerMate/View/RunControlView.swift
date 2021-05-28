@@ -35,6 +35,7 @@ class RunControlView: UIView {
     }
     
     private func configure() {
+        TimerViewModel.shared.delegate = self
         addRoundedCornerAndShadow()
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
@@ -46,6 +47,10 @@ class RunControlView: UIView {
         timerLabel.centerX(inView: self)
         timerLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
         
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
     }
     
     
@@ -56,7 +61,9 @@ class RunControlView: UIView {
             startButton.isInStartingPosition = true
         } else {
             TimerViewModel.shared.timerIsRunning = true
+            TimerViewModel.shared.startTime = Date()
             TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            TimerViewModel.shared.loadTimerString()
             startButton.isInStartingPosition = false
         }
     }
@@ -68,6 +75,33 @@ class RunControlView: UIView {
         
     }
     
+    @objc func applicationDidenterBackground(_ notification: Notification) {
+        if !TimerViewModel.shared.timerIsRunning {
+            TimerViewModel.shared.timer.invalidate()
+            TimerViewModel.shared.ellapsedTime = 0
+            
+            
+            TimerViewModel.shared.timerIsRunning = false
+            
+            
+        }
+    }
     
+    @objc func applicationDidBecomeActive(_ notification: Notification) {
+        if TimerViewModel.shared.timerIsRunning {
+            TimerViewModel.shared.ellapsedTime = 0
+            TimerViewModel.shared.count = 0
+            TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
+            TimerViewModel.shared.ellapsedTime = Date().timeIntervalSince(TimerViewModel.shared.startTime!)
+            TimerViewModel.shared.timerIsRunning = true
+        }
+    }
     
+}
+
+extension RunControlView: TimerViewlModelDelegate {
+    func notifyTimeHasBeenRestored() {
+        print("delegate called")
+        timerLabel.text = TimerViewModel.shared.timeString
+    }
 }
