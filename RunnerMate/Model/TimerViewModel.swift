@@ -66,11 +66,11 @@ class TimerViewModel {
         timeString += String(format: "%02d", seconds)
     }
     
-    func saveTimerString() {
+    func saveTimeData() {
         userDefaults.setValue(timeString, forKey: "timeString")
     }
     
-    func loadTimerString() {
+    func loadTimeData() {
         guard let storedString = userDefaults.string(forKey: "timeString") else { return }
         timeString = storedString
         restoreTime(with: storedString)

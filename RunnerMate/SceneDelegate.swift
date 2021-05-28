@@ -22,26 +22,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
 
     func sceneWillEnterForeground(_ scene: UIScene) {
-        TimerViewModel.shared.loadTimerString()
+        TimerViewModel.shared.loadTimeData()
     }
     
     func sceneWillResignActive(_ scene: UIScene) {
         TimerViewModel.shared.timer.invalidate()
-        TimerViewModel.shared.saveTimerString()
+        TimerViewModel.shared.saveTimeData()
     }
     
     
     func sceneDidEnterBackground(_ scene: UIScene) {
         TimerViewModel.shared.timer.invalidate()
-        TimerViewModel.shared.saveTimerString()
+        TimerViewModel.shared.saveTimeData()
     }
     
     func sceneDidDisconnect(_ scene: UIScene) {
-        TimerViewModel.shared.saveTimerString()
+        TimerViewModel.shared.saveTimeData()
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        TimerViewModel.shared.loadTimerString()
+        TimerViewModel.shared.loadTimeData()
     }
     
 

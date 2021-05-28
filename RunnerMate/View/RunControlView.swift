@@ -63,7 +63,7 @@ class RunControlView: UIView {
             TimerViewModel.shared.timerIsRunning = true
             TimerViewModel.shared.startTime = Date()
             TimerViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
-            TimerViewModel.shared.loadTimerString()
+            TimerViewModel.shared.loadTimeData()
             startButton.isInStartingPosition = false
         }
     }
