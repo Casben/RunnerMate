@@ -102,7 +102,14 @@ extension MapVC: RunControlViewDelegate {
         guard let coordinates = LocationServices.shared.currentLocation else { return }
         setupAnnotation(coordinate: coordinates)
         
-        print("present share vc")
+        let finishRunVC = FinishRunVC()
+        finishRunVC.modalPresentationStyle = .popover
+        
+        present(finishRunVC, animated: true) {
+            RunControlViewModel.shared.reset()
+            self.controlView.reset()
+            self.runView.mapView.removeAnnotations(self.runView.mapView.annotations)
+        }
     }
     
 }

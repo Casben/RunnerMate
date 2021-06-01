@@ -71,6 +71,11 @@ class RunControlView: UIView {
         }
     }
     
+    func reset() {
+        startButton.isInStartingPosition = true
+        timerLabel.text = "00 : 00 : 00"
+    }
+    
     
     @objc private func startButtonTapped() {
         
