@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol RunControlViewDelegate: AnyObject {
+    func runDidBegin()
+}
+
 class RunControlView: UIView {
     
     let startButton: StartButton = {
@@ -17,13 +21,15 @@ class RunControlView: UIView {
     
     let timerLabel: UILabel = {
         let label = UILabel()
-        if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime() {
+        label.text = "00 : 00 : 00"
+        
+        if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime(), storedTime.isEmpty == false  {
             label.text = storedTime
-        } else {
-            label.text = "00 : 00 : 00"
         }
         return label
     }()
+    
+    weak var delegate: RunControlViewDelegate?
     
     init() {
         super.init(frame: .zero)
@@ -62,6 +68,7 @@ class RunControlView: UIView {
             RunControlViewModel.shared.timerIsRunning = false
             RunControlViewModel.shared.timer.invalidate()
             startButton.isInStartingPosition = true
+            
         } else {
             RunControlViewModel.shared.timerIsRunning = true
             RunControlViewModel.shared.startTime = Date()
@@ -69,6 +76,7 @@ class RunControlView: UIView {
             RunControlViewModel.shared.loadTimeData()
             startButton.isInStartingPosition = false
         }
+        delegate?.runDidBegin()
     }
     
     @objc private func updateTimerLabel() {
@@ -100,7 +108,7 @@ class RunControlView: UIView {
     
 }
 
-extension RunControlView: RunControlViewDelegate {
+extension RunControlView: RunControlViewModelDelegate {
     func notifyTimeHasBeenRestored() {
         timerLabel.text = RunControlViewModel.shared.timeString
     }

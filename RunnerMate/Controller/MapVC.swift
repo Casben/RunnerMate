@@ -11,7 +11,8 @@ import MapKit
 class MapVC: UIViewController {
     
     let runView = RunView()
-    let controlButtons = RunControlView()
+    let controlView = RunControlView()
+    var runnerAnnotation: Runner?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +28,10 @@ class MapVC: UIViewController {
         
         runView.delegate = self
         
-        view.addSubview(controlButtons)
-        controlButtons.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 10, paddingRight: 20, width: runView.frame.width, height: 250)
+        view.addSubview(controlView)
+        controlView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 10, paddingRight: 20, width: runView.frame.width, height: 250)
+        
+        controlView.delegate = self
     }
 }
 
@@ -36,8 +39,8 @@ extension MapVC: MKMapViewDelegate {
     
     func checkLocationAuthStatus() {
         if LocationServices.shared.locationManger.authorizationStatus == .authorizedWhenInUse {
-//            runView.mapView.showsUserLocation = true
             runView.mapView.showsUserLocation = true
+            LocationServices.shared.delegate = self
         } else {
             LocationServices.shared.locationManger.requestWhenInUseAuthorization()
         }
@@ -47,4 +50,47 @@ extension MapVC: MKMapViewDelegate {
         let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 500, longitudinalMeters: 500)
         runView.mapView.setRegion(region, animated: true)
     }
+    
+    func setupAnnotation(coordinate: CLLocationCoordinate2D) {
+        runnerAnnotation = Runner(coordinate: coordinate)
+        runView.mapView.addAnnotation(runnerAnnotation!)
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if let annotation = annotation as? Runner {
+            let id = "pin"
+            let view = MKPinAnnotationView(annotation: annotation, reuseIdentifier: id)
+            view.canShowCallout = true
+            view.animatesDrop = true
+            view.pinTintColor = .systemIndigo
+            view.calloutOffset = CGPoint(x: -8, y: -3)
+            view.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            return view
+        }
+        return nil
+    }
+//    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+//        guard let coordinates = LocationServices.shared.currentLocation, let runner = runnerAnnotation else { return }
+//        
+//    }
+}
+
+extension MapVC: CustomUserLocationDelegate {
+    
+    func userLocationUpdated(location: CLLocation) {
+        centerMapOnUserLocation(coordinates: location.coordinate)
+    }
+}
+
+extension MapVC: RunControlViewDelegate {
+    
+    func runDidBegin() {
+        guard let coordinates = LocationServices.shared.currentLocation else { return }
+        
+        if runnerAnnotation == nil {
+            setupAnnotation(coordinate: coordinates)
+        }
+    }
+    
+    
 }

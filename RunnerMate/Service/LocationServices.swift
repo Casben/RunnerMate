@@ -16,6 +16,8 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
     
     static let shared = LocationServices()
     
+    var delegate: CustomUserLocationDelegate?
+    
     var locationManger = CLLocationManager()
     var currentLocation: CLLocationCoordinate2D?
     
@@ -30,5 +32,8 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.currentLocation = manager.location?.coordinate
         
+        if delegate != nil {
+            delegate?.userLocationUpdated(location: locations.first!)
+        }
     }
 }
