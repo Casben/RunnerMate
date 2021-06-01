@@ -74,32 +74,47 @@ class RunControlView: UIView {
     
     @objc private func startButtonTapped() {
         
-//        if RunControlViewModel.shared.timerIsRunning {
-//            RunControlViewModel.shared.timerIsRunning = false
-//            RunControlViewModel.shared.timer.invalidate()
-//            startButton.isInStartingPosition = true
-//            delegate?.runDidEnd()
+//        if startButton.isInStartingPosition == false {
+//            DispatchQueue.main.async {
+//                RunControlViewModel.shared.timer.invalidate()
+//            }
+//
+//            print("timer stopped and call delegate to finish run")
 //        } else {
-//            RunControlViewModel.shared.timerIsRunning = true
-//            RunControlViewModel.shared.startTime = Date()
-////            RunControlViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(updateTimerLabel), userInfo: nil, repeats: true)
-//            setupTimer()
-//            startButton.isInStartingPosition = false
-//            delegate?.runDidBegin()
+//            if RunControlViewModel.shared.timerIsRunning {
+//                RunControlViewModel.shared.timerIsRunning = false
+//                RunControlViewModel.shared.timer.invalidate()
+//                startButton.isInStartingPosition = true
+//                delegate?.runDidEnd()
+//            } else {
+//                RunControlViewModel.shared.timerIsRunning = true
+//                RunControlViewModel.shared.startTime = Date()
+//                setupTimer()
+//                startButton.isInStartingPosition = false
+//                delegate?.runDidBegin()
+//            }
 //        }
-        
-        if startButton.isInStartingPosition {
-            startButton.isInStartingPosition = false
-            setupTimer()
-            delegate?.runDidBegin()
-        } else {
+        switch startButton.isInStartingPosition {
+        case true:
+            if RunControlViewModel.shared.timerIsRunning {
+                RunControlViewModel.shared.timerIsRunning = false
+                RunControlViewModel.shared.timer.invalidate()
+                startButton.isInStartingPosition = true
+                delegate?.runDidEnd()
+            } else {
+                RunControlViewModel.shared.timerIsRunning = true
+                RunControlViewModel.shared.startTime = Date()
+                setupTimer()
+                startButton.isInStartingPosition = false
+                delegate?.runDidBegin()
+            }
+        case false:
             DispatchQueue.main.async {
                 RunControlViewModel.shared.timer.invalidate()
             }
             delegate?.runDidEnd()
+            print("timer stopped and call delegate to finish run")
         }
-        
-        
     }
     
     @objc private func updateTimerLabel() {
@@ -111,7 +126,9 @@ class RunControlView: UIView {
     
     @objc func applicationDidenterBackground(_ notification: Notification) {
         if !RunControlViewModel.shared.timerIsRunning {
-            RunControlViewModel.shared.timer.invalidate()
+            DispatchQueue.main.async {
+                RunControlViewModel.shared.timer.invalidate()
+            }
             RunControlViewModel.shared.ellapsedTime = 0
             RunControlViewModel.shared.timerIsRunning = false
         }
