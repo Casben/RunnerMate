@@ -1,0 +1,34 @@
+//
+//  LocationServices.swift
+//  RunnerMate
+//
+//  Created by Herbert Dodge on 5/31/21.
+//
+
+import Foundation
+import CoreLocation
+
+protocol CustomUserLocationDelegate {
+    func userLocationUpdated(location: CLLocation)
+}
+
+class LocationServices: NSObject, CLLocationManagerDelegate {
+    
+    static let shared = LocationServices()
+    
+    var locationManger = CLLocationManager()
+    var currentLocation: CLLocationCoordinate2D?
+    
+    override init() {
+        super.init()
+        self.locationManger.delegate = self
+        self.locationManger.desiredAccuracy = kCLLocationAccuracyBest
+        self.locationManger.distanceFilter = 50
+        self.locationManger.startUpdatingLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.currentLocation = manager.location?.coordinate
+        
+    }
+}

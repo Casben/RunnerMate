@@ -8,9 +8,15 @@
 import UIKit
 import MapKit
 
-class MapView: UIView {
+class RunView: UIView {
 
     let mapView = MKMapView()
+    
+    weak var delegate: MKMapViewDelegate? {
+        didSet {
+            mapView.delegate = delegate
+        }
+    }
     
     init() {
         super.init(frame: .zero)
