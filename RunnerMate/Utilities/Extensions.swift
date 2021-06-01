@@ -7,6 +7,8 @@
 
 import UIKit
 
+let userDefaults = UserDefaults.standard
+
 extension UIView {
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 left: NSLayoutXAxisAnchor? = nil,

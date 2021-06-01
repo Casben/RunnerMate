@@ -16,7 +16,7 @@ protocol RunControlViewModelDelegate: AnyObject {
 class RunControlViewModel {
     
     static let shared = RunControlViewModel()
-    let userDefaults = UserDefaults.standard
+    
     
     var time: Time = (0, 0, 0) {
         didSet {

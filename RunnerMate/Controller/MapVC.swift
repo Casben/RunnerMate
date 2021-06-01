@@ -12,6 +12,7 @@ class MapVC: UIViewController {
     
     let runView = RunView()
     let controlView = RunControlView()
+    
     var runnerAnnotation: Runner?
 
     override func viewDidLoad() {
@@ -32,6 +33,13 @@ class MapVC: UIViewController {
         controlView.anchor(left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingLeft: 20, paddingBottom: 10, paddingRight: 20, width: runView.frame.width, height: 250)
         
         controlView.delegate = self
+        restoreSaveRunData()
+    }
+    
+    func restoreSaveRunData() {
+        if MapVCViewModel.shared.loadRunData() {
+            setupAnnotation(coordinate: MapVCViewModel.shared.savedCoordinates!)
+        }
     }
 }
 
@@ -47,7 +55,7 @@ extension MapVC: MKMapViewDelegate {
     }
     
     func centerMapOnUserLocation(coordinates: CLLocationCoordinate2D) {
-        let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 500, longitudinalMeters: 500)
+        let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 200, longitudinalMeters: 200)
         runView.mapView.setRegion(region, animated: true)
     }
     
@@ -83,14 +91,18 @@ extension MapVC: CustomUserLocationDelegate {
 }
 
 extension MapVC: RunControlViewDelegate {
-    
     func runDidBegin() {
         guard let coordinates = LocationServices.shared.currentLocation else { return }
-        
-        if runnerAnnotation == nil {
             setupAnnotation(coordinate: coordinates)
-        }
+        MapVCViewModel.shared.saveRunData(withCoordinates: coordinates)
+        
     }
-    
+    func runDidEnd() {
+        
+        guard let coordinates = LocationServices.shared.currentLocation else { return }
+        setupAnnotation(coordinate: coordinates)
+        
+        print("present share vc")
+    }
     
 }
