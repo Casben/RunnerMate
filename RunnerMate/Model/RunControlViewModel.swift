@@ -30,6 +30,7 @@ class RunControlViewModel {
     var timeString: String = ""
     var timerIsRunning = false
     
+    
     var startTime: Date?
     var ellapsedTime: TimeInterval = 0  {
         didSet {

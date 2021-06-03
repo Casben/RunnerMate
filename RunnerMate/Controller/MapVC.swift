@@ -112,6 +112,7 @@ extension MapVC: RunControlViewDelegate {
             setupAnnotation(coordinate: startCoordinates)
         self.startCoordinates = startCoordinates
         MapVCViewModel.shared.saveRunData(withCoordinates: startCoordinates)
+        MapVCViewModel.shared.runInProgress = true
         
     }
     
@@ -119,7 +120,7 @@ extension MapVC: RunControlViewDelegate {
         guard let endCoordinates = LocationServices.shared.currentLocation else { return }
         
         setupAnnotation(coordinate: endCoordinates)
-        
+        MapVCViewModel.shared.runInProgress = false
         showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] route in
             guard let route = route else { return }
             

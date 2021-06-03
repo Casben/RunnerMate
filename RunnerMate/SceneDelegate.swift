@@ -37,7 +37,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func sceneDidBecomeActive(_ scene: UIScene) {
-        RunControlViewModel.shared.loadTimeData()
+        if MapVCViewModel.shared.runInProgress == true {
+            RunControlViewModel.shared.loadTimeData()
+        }
+        
     }
 }
 

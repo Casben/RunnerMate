@@ -11,6 +11,7 @@ import CoreLocation
 class MapVCViewModel {
     static let shared = MapVCViewModel()
     var savedCoordinates: CLLocationCoordinate2D?
+    var runInProgress: Bool?
     
     func saveRunData(withCoordinates coordinates: CLLocationCoordinate2D) {
         let latitude = coordinates.latitude
