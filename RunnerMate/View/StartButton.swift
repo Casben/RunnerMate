@@ -43,7 +43,6 @@ class StartButton: UIButton {
         }
     }
     
-
     init(type: ButtonType) {
         super.init(frame: .zero)
         configure()

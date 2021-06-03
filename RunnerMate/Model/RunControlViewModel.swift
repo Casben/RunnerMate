@@ -65,18 +65,18 @@ class RunControlViewModel {
     }
     
     func saveTimeData() {
-        userDefaults.setValue(timeString, forKey: "timeString")
+        userDefaults.setValue(timeString, forKey: UserDefaultsKeys.timeStringKey)
     }
     
     func loadTimeData() {
-        guard let storedString = userDefaults.string(forKey: "timeString") else { return }
+        guard let storedString = userDefaults.string(forKey: UserDefaultsKeys.timeStringKey) else { return }
         guard storedString.isEmpty == false else { return }
         timeString = storedString
         restoreTime(with: storedString)
     }
     
     func confiugreTimerLabelWithStoredTime() -> String? {
-        guard let storedTime = userDefaults.string(forKey: "timeString") else { return nil }
+        guard let storedTime = userDefaults.string(forKey: UserDefaultsKeys.timeStringKey) else { return nil }
         return storedTime
     }
     
@@ -88,7 +88,7 @@ class RunControlViewModel {
     
     func reset() {
         timerIsRunning = false
-        userDefaults.removeObject(forKey: "timeString")
+        userDefaults.removeObject(forKey: UserDefaultsKeys.timeStringKey)
         timer.invalidate()
         count = 0
         timeString = ""

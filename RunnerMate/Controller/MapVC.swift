@@ -121,10 +121,12 @@ extension MapVC: RunControlViewDelegate {
         
         setupAnnotation(coordinate: endCoordinates)
         MapVCViewModel.shared.runInProgress = false
-        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] route in
-            guard let route = route else { return }
+        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] runDistance in
+            guard let runDistance = runDistance else { return }
             
-            self.presentFinishRunVC(withRoute: route)
+            self.controlView.shouldRunCompletionUI(beHidden: false)
+            self.controlView.calculateForMilesAndKilometers(withDistance: runDistance)
+            
         }
     }
     
@@ -132,7 +134,7 @@ extension MapVC: RunControlViewDelegate {
 
 extension MapVC {
     
-    func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D, completion: @escaping (MKRoute?) -> Void) {
+    func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D, completion: @escaping (CLLocationDistance?) -> Void) {
         
         let request = MKDirections.Request()
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinates))
@@ -145,7 +147,8 @@ extension MapVC {
             if let route = response?.routes.first {
                 self.runView.mapView.addOverlay(route.polyline)
                 self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
-                completion(route)
+                
+                completion(route.distance)
                 
             } else {
                 completion(nil)
@@ -154,11 +157,6 @@ extension MapVC {
     }
     
     func presentFinishRunVC(withRoute route: MKRoute) {
-        let finishRunVC = FinishRunVC()
-        finishRunVC.route = route
-        finishRunVC.modalPresentationStyle = .popover
-        
-        present(finishRunVC, animated: true)
         resetMapVC()
     }
 }

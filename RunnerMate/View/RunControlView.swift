@@ -17,7 +17,6 @@ class RunControlView: UIView {
     let startButton: StartButton = {
         let button = StartButton(type: .system)
         button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-        
         return button
     }()
     
@@ -27,13 +26,20 @@ class RunControlView: UIView {
         control.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
         control.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
         control.selectedSegmentIndex = 0
+        control.addTarget(self, action: #selector(updateDistanceRunLabel), for: .valueChanged)
         return control
     }()
     
     let distanceRanLabel: UILabel = {
         let label = UILabel()
-        label.text = "You ran 9 miles."
         return label
+    }()
+    
+    let shareButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.tintColor = .systemIndigo
+        return button
     }()
     
     let runTimeLabel: UILabel = {
@@ -57,6 +63,9 @@ class RunControlView: UIView {
     
     weak var delegate: RunControlViewDelegate?
     
+    var runDistanceInMiles: Double?
+    var runDistancecInKilometers: Double?
+    
     init() {
         super.init(frame: .zero)
         configure()
@@ -72,10 +81,12 @@ class RunControlView: UIView {
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
         
-        addSubviews(distanceSegmentedControl, distanceRanLabel, startButton, runTimeLabel, timerLabel)
+        addSubviews(distanceSegmentedControl, shareButton, distanceRanLabel, startButton, runTimeLabel, timerLabel)
         
         distanceSegmentedControl.centerX(inView: self)
         distanceSegmentedControl.anchor(top: self.topAnchor, paddingTop: 8)
+        
+        shareButton.anchor(top: self.topAnchor, right: self.rightAnchor, paddingTop: 8, paddingRight: 20)
         
         distanceRanLabel.centerX(inView: self)
         distanceRanLabel.anchor(top: distanceSegmentedControl.bottomAnchor, paddingTop: 20)
@@ -86,8 +97,10 @@ class RunControlView: UIView {
         runTimeLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
         
         timerLabel.anchor(bottom: startButton.topAnchor, right: startButton.rightAnchor, paddingBottom: 8, paddingRight: 8)
+        
         RunControlViewModel.shared.loadTimeData()
         configureNotificationObservers()
+        shouldRunCompletionUI(beHidden: true)
     }
     
     func configureNotificationObservers() {
@@ -108,6 +121,22 @@ class RunControlView: UIView {
         timerLabel.text = "00 : 00 : 00"
     }
     
+    func shouldRunCompletionUI(beHidden value: Bool) {
+        distanceSegmentedControl.isHidden = value
+        shareButton.isHidden = value
+        distanceRanLabel.isHidden = value
+        
+        startButton.isEnabled = value
+        
+    }
+    
+    func calculateForMilesAndKilometers(withDistance distance: Double) {
+        runDistancecInKilometers = distance / 1000
+        runDistanceInMiles = distance / 1609
+        
+        let miles = String(format: "%.2f", runDistanceInMiles!)
+        distanceRanLabel.text = "You ran \(miles) miles."
+    }
     
     @objc private func startButtonTapped() {
         switch startButton.isInStartingPosition {
@@ -140,7 +169,20 @@ class RunControlView: UIView {
         
     }
     
-    @objc func applicationDidenterBackground(_ notification: Notification) {
+    @objc private func updateDistanceRunLabel(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            let miles = String(format: "%.2f", runDistanceInMiles!)
+            distanceRanLabel.text = "You ran \(miles) miles."
+        case 1:
+            let kilometers = String(format: "%.2f", runDistancecInKilometers!)
+            distanceRanLabel.text = "You ran \(kilometers) kilometers."
+        default:
+            break
+        }
+    }
+    
+    @objc private func applicationDidenterBackground(_ notification: Notification) {
         if !RunControlViewModel.shared.timerIsRunning {
             DispatchQueue.main.async {
                 RunControlViewModel.shared.timer.invalidate()
@@ -151,7 +193,7 @@ class RunControlView: UIView {
         
     }
     
-    @objc func applicationDidBecomeActive(_ notification: Notification) {
+    @objc private func applicationDidBecomeActive(_ notification: Notification) {
         if RunControlViewModel.shared.timerIsRunning {
             RunControlViewModel.shared.ellapsedTime = 0
             RunControlViewModel.shared.count = 0
