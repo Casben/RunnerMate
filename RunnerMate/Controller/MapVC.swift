@@ -14,6 +14,7 @@ class MapVC: UIViewController {
     let controlView = RunControlView()
     
     var runnerAnnotation: Runner?
+    var startCoordinates: CLLocationCoordinate2D?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,7 +56,7 @@ extension MapVC: MKMapViewDelegate {
     }
     
     func centerMapOnUserLocation(coordinates: CLLocationCoordinate2D) {
-        let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 200, longitudinalMeters: 200)
+        let region = MKCoordinateRegion(center: coordinates, latitudinalMeters: 250, longitudinalMeters: 250)
         runView.mapView.setRegion(region, animated: true)
     }
     
@@ -81,6 +82,15 @@ extension MapVC: MKMapViewDelegate {
 //        guard let coordinates = LocationServices.shared.currentLocation, let runner = runnerAnnotation else { return }
 //        
 //    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let directionsRenderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
+        directionsRenderer.strokeColor = .systemIndigo
+        directionsRenderer.lineWidth = 5
+        directionsRenderer.alpha = 0.85
+        
+        return directionsRenderer
+    }
 }
 
 extension MapVC: CustomUserLocationDelegate {
@@ -91,25 +101,50 @@ extension MapVC: CustomUserLocationDelegate {
 }
 
 extension MapVC: RunControlViewDelegate {
+    
     func runDidBegin() {
-        guard let coordinates = LocationServices.shared.currentLocation else { return }
-            setupAnnotation(coordinate: coordinates)
-        MapVCViewModel.shared.saveRunData(withCoordinates: coordinates)
+        guard let startCoordinates = LocationServices.shared.currentLocation else { return }
+            setupAnnotation(coordinate: startCoordinates)
+        self.startCoordinates = startCoordinates
+        MapVCViewModel.shared.saveRunData(withCoordinates: startCoordinates)
         
     }
+    
     func runDidEnd() {
+        guard let endCoordinates = LocationServices.shared.currentLocation else { return }
+        setupAnnotation(coordinate: endCoordinates)
         
-        guard let coordinates = LocationServices.shared.currentLocation else { return }
-        setupAnnotation(coordinate: coordinates)
+        
+        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates)
         
         let finishRunVC = FinishRunVC()
         finishRunVC.modalPresentationStyle = .popover
         
-        present(finishRunVC, animated: true) {
-            RunControlViewModel.shared.reset()
-            self.controlView.reset()
-            self.runView.mapView.removeAnnotations(self.runView.mapView.annotations)
-        }
+//        present(finishRunVC, animated: true) {
+//            RunControlViewModel.shared.reset()
+//            self.controlView.reset()
+//            self.runView.mapView.removeAnnotations(self.runView.mapView.annotations)
+//        }
     }
     
+}
+
+extension MapVC {
+    
+    func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D) {
+        
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinates))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: endCoordinates))
+        request.transportType = .walking
+        
+        let directions = MKDirections(request: request)
+        
+        directions.calculate { [unowned self] response, error in
+            guard let route = response?.routes.first else { return }
+            
+            self.runView.mapView.addOverlay(route.polyline)
+            self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
+        }
+    }
 }
