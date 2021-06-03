@@ -42,6 +42,15 @@ class MapVC: UIViewController {
             setupAnnotation(coordinate: MapVCViewModel.shared.savedCoordinates!)
         }
     }
+    
+    func resetMapVC() {
+        RunControlViewModel.shared.reset()
+        MapVCViewModel.shared.reset()
+        controlView.reset()
+        runView.mapView.removeAnnotations(runView.mapView.annotations)
+        runView.mapView.removeAnnotations(runView.mapView.annotations)
+        runView.mapView.overlays.forEach { runView.mapView.removeOverlay($0) }
+    }
 }
 
 extension MapVC: MKMapViewDelegate {
@@ -78,10 +87,6 @@ extension MapVC: MKMapViewDelegate {
         }
         return nil
     }
-//    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-//        guard let coordinates = LocationServices.shared.currentLocation, let runner = runnerAnnotation else { return }
-//        
-//    }
     
     func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
         let directionsRenderer = MKPolylineRenderer(polyline: overlay as! MKPolyline)
@@ -112,26 +117,21 @@ extension MapVC: RunControlViewDelegate {
     
     func runDidEnd() {
         guard let endCoordinates = LocationServices.shared.currentLocation else { return }
+        
         setupAnnotation(coordinate: endCoordinates)
         
-        
-        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates)
-        
-        let finishRunVC = FinishRunVC()
-        finishRunVC.modalPresentationStyle = .popover
-        
-//        present(finishRunVC, animated: true) {
-//            RunControlViewModel.shared.reset()
-//            self.controlView.reset()
-//            self.runView.mapView.removeAnnotations(self.runView.mapView.annotations)
-//        }
+        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] route in
+            guard let route = route else { return }
+            
+            self.presentFinishRunVC(withRoute: route)
+        }
     }
     
 }
 
 extension MapVC {
     
-    func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D) {
+    func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D, completion: @escaping (MKRoute?) -> Void) {
         
         let request = MKDirections.Request()
         request.source = MKMapItem(placemark: MKPlacemark(coordinate: startCoordinates))
@@ -141,10 +141,23 @@ extension MapVC {
         let directions = MKDirections(request: request)
         
         directions.calculate { [unowned self] response, error in
-            guard let route = response?.routes.first else { return }
-            
-            self.runView.mapView.addOverlay(route.polyline)
-            self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
+            if let route = response?.routes.first {
+                self.runView.mapView.addOverlay(route.polyline)
+                self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
+                completion(route)
+                
+            } else {
+                completion(nil)
+            }
         }
+    }
+    
+    func presentFinishRunVC(withRoute route: MKRoute) {
+        let finishRunVC = FinishRunVC()
+        finishRunVC.route = route
+        finishRunVC.modalPresentationStyle = .popover
+        
+        present(finishRunVC, animated: true)
+        resetMapVC()
     }
 }

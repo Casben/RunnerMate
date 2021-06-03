@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import MapKit
 
 class FinishRunVC: UIViewController {
+    
+    var route: MKRoute!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,7 +20,7 @@ class FinishRunVC: UIViewController {
     
     func configure() {
         view.backgroundColor = .red
-        
+        print(route)
     }
 
 }

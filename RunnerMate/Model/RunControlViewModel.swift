@@ -74,6 +74,11 @@ class RunControlViewModel {
         restoreTime(with: storedString)
     }
     
+    func validateTimeIsStored() -> Bool {
+       let value = userDefaults.string(forKey: "timeString") == nil ? false : true
+        return value
+    }
+    
     func confiugreTimerLabelWithStoredTime() -> String? {
         guard let storedTime = userDefaults.string(forKey: "timeString") else { return nil }
         return storedTime
@@ -86,11 +91,12 @@ class RunControlViewModel {
     }
     
     func reset() {
+        timerIsRunning = false
         userDefaults.removeObject(forKey: "timeString")
         timer.invalidate()
         count = 0
         timeString = ""
-        timerIsRunning = false
         ellapsedTime = 0
+        print(timerIsRunning)
     }
 }

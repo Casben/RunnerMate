@@ -25,4 +25,10 @@ class MapVCViewModel {
         savedCoordinates = CLLocationCoordinate2D(latitude: latitude as! CLLocationDegrees, longitude: longitude as! CLLocationDegrees)
         return true
     }
+    
+    func reset() {
+        userDefaults.removeObject(forKey: "latitude")
+        userDefaults.removeObject(forKey: "longitude")
+        savedCoordinates = nil
+    }
 }

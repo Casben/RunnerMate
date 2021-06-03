@@ -20,10 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-        RunControlViewModel.shared.loadTimeData()
-    }
     
     func sceneWillResignActive(_ scene: UIScene) {
         RunControlViewModel.shared.timer.invalidate()
@@ -43,7 +39,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneDidBecomeActive(_ scene: UIScene) {
         RunControlViewModel.shared.loadTimeData()
     }
-    
-
 }
 

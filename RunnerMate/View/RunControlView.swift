@@ -135,8 +135,9 @@ class RunControlView: UIView {
                 RunControlViewModel.shared.timer.invalidate()
             }
             RunControlViewModel.shared.ellapsedTime = 0
-            RunControlViewModel.shared.timerIsRunning = false
+            
         }
+        RunControlViewModel.shared.timerIsRunning = false
     }
     
     @objc func applicationDidBecomeActive(_ notification: Notification) {
@@ -148,7 +149,6 @@ class RunControlView: UIView {
             RunControlViewModel.shared.timerIsRunning = true
         }
     }
-    
 }
 
 extension RunControlView: RunControlViewModelDelegate {
