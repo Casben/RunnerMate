@@ -21,6 +21,28 @@ class RunControlView: UIView {
         return button
     }()
     
+    let distanceSegmentedControl: UISegmentedControl = {
+        let control = UISegmentedControl(items: ["Miles", "Kilometers"])
+        control.backgroundColor = .systemIndigo
+        control.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
+        control.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
+        control.selectedSegmentIndex = 0
+        return control
+    }()
+    
+    let distanceRanLabel: UILabel = {
+        let label = UILabel()
+        label.text = "You ran 9 miles."
+        return label
+    }()
+    
+    let runTimeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Run Time:"
+        label.font = UIFont.boldSystemFont(ofSize: 26)
+        return label
+    }()
+    
     let timerLabel: UILabel = {
         let label = UILabel()
         label.text = "00 : 00 : 00"
@@ -28,6 +50,8 @@ class RunControlView: UIView {
         if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime(), storedTime.isEmpty == false  {
             label.text = storedTime
         }
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = .systemIndigo
         return label
     }()
     
@@ -48,12 +72,20 @@ class RunControlView: UIView {
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
         
-        addSubviews(startButton, timerLabel)
+        addSubviews(distanceSegmentedControl, distanceRanLabel, startButton, runTimeLabel, timerLabel)
+        
+        distanceSegmentedControl.centerX(inView: self)
+        distanceSegmentedControl.anchor(top: self.topAnchor, paddingTop: 8)
+        
+        distanceRanLabel.centerX(inView: self)
+        distanceRanLabel.anchor(top: distanceSegmentedControl.bottomAnchor, paddingTop: 20)
         
         startButton.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor,  paddingLeft: 8, paddingBottom: 10, paddingRight: 8, height: 60)
+
+        runTimeLabel.centerX(inView: self)
+        runTimeLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
         
-        timerLabel.centerX(inView: self)
-        timerLabel.anchor(bottom: startButton.topAnchor, paddingBottom: 8)
+        timerLabel.anchor(bottom: startButton.topAnchor, right: startButton.rightAnchor, paddingBottom: 8, paddingRight: 8)
         RunControlViewModel.shared.loadTimeData()
         configureNotificationObservers()
     }
@@ -78,27 +110,6 @@ class RunControlView: UIView {
     
     
     @objc private func startButtonTapped() {
-        
-//        if startButton.isInStartingPosition == false {
-//            DispatchQueue.main.async {
-//                RunControlViewModel.shared.timer.invalidate()
-//            }
-//
-//            print("timer stopped and call delegate to finish run")
-//        } else {
-//            if RunControlViewModel.shared.timerIsRunning {
-//                RunControlViewModel.shared.timerIsRunning = false
-//                RunControlViewModel.shared.timer.invalidate()
-//                startButton.isInStartingPosition = true
-//                delegate?.runDidEnd()
-//            } else {
-//                RunControlViewModel.shared.timerIsRunning = true
-//                RunControlViewModel.shared.startTime = Date()
-//                setupTimer()
-//                startButton.isInStartingPosition = false
-//                delegate?.runDidBegin()
-//            }
-//        }
         switch startButton.isInStartingPosition {
         case true:
             if RunControlViewModel.shared.timerIsRunning {
