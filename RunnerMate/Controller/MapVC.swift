@@ -106,7 +106,7 @@ extension MapVC: CustomUserLocationDelegate {
 }
 
 extension MapVC: RunControlViewDelegate {
-    
+
     func runDidBegin() {
         guard let startCoordinates = LocationServices.shared.currentLocation else { return }
             setupAnnotation(coordinate: startCoordinates)
@@ -128,6 +128,10 @@ extension MapVC: RunControlViewDelegate {
             self.controlView.calculateForMilesAndKilometers(withDistance: runDistance)
             
         }
+    }
+    
+    func resetButtonTapped() {
+        resetMapVC()
     }
     
 }

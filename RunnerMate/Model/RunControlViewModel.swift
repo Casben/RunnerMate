@@ -93,6 +93,5 @@ class RunControlViewModel {
         count = 0
         timeString = ""
         ellapsedTime = 0
-        print(timerIsRunning)
     }
 }

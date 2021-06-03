@@ -10,6 +10,7 @@ import UIKit
 protocol RunControlViewDelegate: AnyObject {
     func runDidBegin()
     func runDidEnd()
+    func resetButtonTapped()
 }
 
 class RunControlView: UIView {
@@ -37,8 +38,16 @@ class RunControlView: UIView {
     
     let shareButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setImage(UIImage(systemName: "square.and.arrow.up")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        button.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         button.tintColor = .systemIndigo
+        return button
+    }()
+    
+    let resetButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "arrow.clockwise"), for: .normal)
+        button.tintColor = .systemIndigo
+        button.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -81,12 +90,13 @@ class RunControlView: UIView {
         backgroundColor = UIColor(white: 1, alpha: 0.8)
         alpha = 0.75
         
-        addSubviews(distanceSegmentedControl, shareButton, distanceRanLabel, startButton, runTimeLabel, timerLabel)
+        addSubviews(distanceSegmentedControl, resetButton, shareButton, distanceRanLabel, startButton, runTimeLabel, timerLabel)
         
         distanceSegmentedControl.centerX(inView: self)
         distanceSegmentedControl.anchor(top: self.topAnchor, paddingTop: 8)
         
         shareButton.anchor(top: self.topAnchor, right: self.rightAnchor, paddingTop: 8, paddingRight: 20)
+        resetButton.anchor(top: self.topAnchor, left: self.leftAnchor, paddingTop: 8, paddingLeft: 20)
         
         distanceRanLabel.centerX(inView: self)
         distanceRanLabel.anchor(top: distanceSegmentedControl.bottomAnchor, paddingTop: 20)
@@ -124,6 +134,7 @@ class RunControlView: UIView {
     func shouldRunCompletionUI(beHidden value: Bool) {
         distanceSegmentedControl.isHidden = value
         shareButton.isHidden = value
+        resetButton.isHidden = value
         distanceRanLabel.isHidden = value
         
         startButton.isEnabled = value
@@ -160,6 +171,13 @@ class RunControlView: UIView {
             delegate?.runDidEnd()
             print("timer stopped and call delegate to finish run")
         }
+    }
+    
+    @objc private func resetButtonTapped() {
+        timerLabel.text = "00 : 00 : 00"
+        startButton.isInStartingPosition = true
+        shouldRunCompletionUI(beHidden: true)
+        delegate?.resetButtonTapped()
     }
     
     @objc private func updateTimerLabel() {
