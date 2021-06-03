@@ -61,7 +61,7 @@ class RunControlView: UIView {
     func configureNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIScene.didActivateNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
     
     func setupTimer() {
@@ -135,9 +135,9 @@ class RunControlView: UIView {
                 RunControlViewModel.shared.timer.invalidate()
             }
             RunControlViewModel.shared.ellapsedTime = 0
-            
+            RunControlViewModel.shared.timerIsRunning = false
         }
-        RunControlViewModel.shared.timerIsRunning = false
+        
     }
     
     @objc func applicationDidBecomeActive(_ notification: Notification) {
