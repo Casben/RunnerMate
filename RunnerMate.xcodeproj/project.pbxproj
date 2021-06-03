@@ -22,6 +22,7 @@
 		CB5249BD265C945E0082749B /* StartButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249BC265C945E0082749B /* StartButton.swift */; };
 		CB5249C3265CAA8C0082749B /* RunControlViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5249C2265CAA8C0082749B /* RunControlViewModel.swift */; };
 		CB69FCF2266942BA00F9F657 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69FCF1266942BA00F9F657 /* Constants.swift */; };
+		CB69FCF42669785800F9F657 /* TimerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB69FCF32669785800F9F657 /* TimerLabel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,7 @@
 		CB5249BC265C945E0082749B /* StartButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartButton.swift; sourceTree = "<group>"; };
 		CB5249C2265CAA8C0082749B /* RunControlViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunControlViewModel.swift; sourceTree = "<group>"; };
 		CB69FCF1266942BA00F9F657 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		CB69FCF32669785800F9F657 /* TimerLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerLabel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 				CB5249B1265B3D5C0082749B /* RunView.swift */,
 				CB5249B8265B447C0082749B /* RunControlView.swift */,
 				CB5249BC265C945E0082749B /* StartButton.swift */,
+				CB69FCF32669785800F9F657 /* TimerLabel.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -214,6 +217,7 @@
 				CB524998265B2BEE0082749B /* AppDelegate.swift in Sources */,
 				CB5249BD265C945E0082749B /* StartButton.swift in Sources */,
 				CB216F302665CB460037FE8D /* LocationServices.swift in Sources */,
+				CB69FCF42669785800F9F657 /* TimerLabel.swift in Sources */,
 				CB52499A265B2BEE0082749B /* SceneDelegate.swift in Sources */,
 				CB69FCF2266942BA00F9F657 /* Constants.swift in Sources */,
 			);

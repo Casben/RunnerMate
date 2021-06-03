@@ -15,6 +15,8 @@ class MapVC: UIViewController {
     
     var runnerAnnotation: Runner?
     var startCoordinates: CLLocationCoordinate2D?
+    var endCoordinates: CLLocationCoordinate2D?
+    var route: MKRoute?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,7 +108,7 @@ extension MapVC: CustomUserLocationDelegate {
 }
 
 extension MapVC: RunControlViewDelegate {
-
+    
     func runDidBegin() {
         guard let startCoordinates = LocationServices.shared.currentLocation else { return }
             setupAnnotation(coordinate: startCoordinates)
@@ -120,6 +122,7 @@ extension MapVC: RunControlViewDelegate {
         guard let endCoordinates = LocationServices.shared.currentLocation else { return }
         
         setupAnnotation(coordinate: endCoordinates)
+        self.endCoordinates = endCoordinates
         MapVCViewModel.shared.runInProgress = false
         showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] runDistance in
             guard let runDistance = runDistance else { return }
@@ -132,6 +135,17 @@ extension MapVC: RunControlViewDelegate {
     
     func resetButtonTapped() {
         resetMapVC()
+    }
+    
+    func shareButtonTapped() {
+        
+        renderSnapShotOfMap { image in
+            let activityItems: [Any] = ["Check out this run I just did!", image]
+            let shareSheet = UIActivityViewController(activityItems: activityItems, applicationActivities: [])
+            self.present(shareSheet, animated: true)
+        }
+        
+        
     }
     
 }
@@ -151,7 +165,7 @@ extension MapVC {
             if let route = response?.routes.first {
                 self.runView.mapView.addOverlay(route.polyline)
                 self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
-                
+                self.route = route
                 completion(route.distance)
                 
             } else {
@@ -160,7 +174,53 @@ extension MapVC {
         }
     }
     
-    func presentFinishRunVC(withRoute route: MKRoute) {
-        resetMapVC()
+    func renderSnapShotOfMap(completion: @escaping (UIImage) -> Void) {
+        guard let latitude = startCoordinates?.latitude, let longitude = endCoordinates?.longitude else { return }
+        
+        let snapshotOptions = MKMapSnapshotter.Options()
+        let location = CLLocationCoordinate2DMake(latitude, longitude)
+        let region = MKCoordinateRegion(center: location, latitudinalMeters: 300, longitudinalMeters: 300)
+        
+        snapshotOptions.region = region
+        snapshotOptions.scale = UIScreen.main.scale
+        snapshotOptions.size = CGSize(width: 300, height: 300)
+        snapshotOptions.showsBuildings = true
+        
+        let snapshotter = MKMapSnapshotter(options: snapshotOptions)
+        
+        snapshotter.start { snapshot, error in
+            guard let snapshot = snapshot else { return }
+            
+            let image = self.addAnnotationsAndPolylineTo(snapshot: snapshot)
+            completion(image)
+        }
+    }
+    
+    func addAnnotationsAndPolylineTo(snapshot: MKMapSnapshotter.Snapshot) -> UIImage {
+        let image = snapshot.image
+        
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: 300, height: 300), true, 0)
+        image.draw(at: CGPoint.zero)
+        
+        let polyLineCoordinates = [startCoordinates!, endCoordinates!]
+        
+        let context = UIGraphicsGetCurrentContext()
+        context?.setLineWidth(2.0)
+        context?.setStrokeColor(UIColor.systemIndigo.cgColor)
+        
+        context?.move(to: snapshot.point(for: polyLineCoordinates[0]))
+        
+        for i in 0...polyLineCoordinates.count - 1 {
+            context?.addLine(to: snapshot.point(for: polyLineCoordinates[i]))
+            context?.move(to: snapshot.point(for: polyLineCoordinates[i]))
+        }
+        
+        context?.strokePath()
+        
+        let resultImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        return resultImage!
     }
 }

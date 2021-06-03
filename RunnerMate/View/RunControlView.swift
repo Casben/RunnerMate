@@ -11,6 +11,7 @@ protocol RunControlViewDelegate: AnyObject {
     func runDidBegin()
     func runDidEnd()
     func resetButtonTapped()
+    func shareButtonTapped()
 }
 
 class RunControlView: UIView {
@@ -40,6 +41,7 @@ class RunControlView: UIView {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         button.tintColor = .systemIndigo
+        button.addTarget(self, action: #selector(shareButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -58,15 +60,12 @@ class RunControlView: UIView {
         return label
     }()
     
-    let timerLabel: UILabel = {
-        let label = UILabel()
-        label.text = "00 : 00 : 00"
-        
+    let timerLabel: TimerLabel = {
+        let label = TimerLabel()
+
         if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime(), storedTime.isEmpty == false  {
             label.text = storedTime
         }
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.textColor = .systemIndigo
         return label
     }()
     
@@ -128,7 +127,7 @@ class RunControlView: UIView {
     
     func reset() {
         startButton.isInStartingPosition = true
-        timerLabel.text = "00 : 00 : 00"
+        timerLabel.setStartingPositionText()
     }
     
     func shouldRunCompletionUI(beHidden value: Bool) {
@@ -174,10 +173,14 @@ class RunControlView: UIView {
     }
     
     @objc private func resetButtonTapped() {
-        timerLabel.text = "00 : 00 : 00"
+        timerLabel.setStartingPositionText()
         startButton.isInStartingPosition = true
         shouldRunCompletionUI(beHidden: true)
         delegate?.resetButtonTapped()
+    }
+    
+    @objc func shareButtonTapped() {
+        delegate?.shareButtonTapped()
     }
     
     @objc private func updateTimerLabel() {
