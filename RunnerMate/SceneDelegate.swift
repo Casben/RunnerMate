@@ -21,26 +21,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     
-    func sceneWillResignActive(_ scene: UIScene) {
-        RunControlViewModel.shared.timer.invalidate()
-        RunControlViewModel.shared.saveTimeData()
-    }
+//    func sceneWillResignActive(_ scene: UIScene) {
+//        RunControlViewModel.shared.timer.invalidate()
+//        RunControlViewModel.shared.saveTimeData()
+//    }
     
     
-    func sceneDidEnterBackground(_ scene: UIScene) {
-        RunControlViewModel.shared.timer.invalidate()
-        RunControlViewModel.shared.saveTimeData()
-    }
-    
+//    func sceneDidEnterBackground(_ scene: UIScene) {
+//        RunControlViewModel.shared.timer.invalidate()
+//        RunControlViewModel.shared.saveTimeData()
+//    }
     func sceneDidDisconnect(_ scene: UIScene) {
         RunControlViewModel.shared.saveTimeData()
     }
     
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        if MapVCViewModel.shared.runInProgress == true {
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        if MapViewModel.shared.checkIfRunDataExsists() {
             RunControlViewModel.shared.loadTimeData()
         }
-        
     }
+    
+//    func sceneDidBecomeActive(_ scene: UIScene) {
+//        if MapViewModel.shared.checkIfRunDataExsists() {
+//            RunControlViewModel.shared.loadTimeData()
+//        }
+//
+//    }
+
 }
 

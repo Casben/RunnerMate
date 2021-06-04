@@ -17,7 +17,6 @@ class RunControlViewModel {
     
     static let shared = RunControlViewModel()
     
-    
     var time: Time = (0, 0, 0) {
         didSet {
             makeTimeString(hours: time.0, minutes: time.1, seconds: time.2)
@@ -29,7 +28,6 @@ class RunControlViewModel {
     
     var timeString: String = ""
     var timerIsRunning = false
-    
     
     var startTime: Date?
     var ellapsedTime: TimeInterval = 0  {
@@ -71,6 +69,7 @@ class RunControlViewModel {
     func loadTimeData() {
         guard let storedString = userDefaults.string(forKey: UserDefaultsKeys.timeStringKey) else { return }
         guard storedString.isEmpty == false else { return }
+        print("stored string is \(storedString)")
         timeString = storedString
         restoreTime(with: storedString)
     }

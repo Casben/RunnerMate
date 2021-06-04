@@ -40,14 +40,16 @@ class MapVC: UIViewController {
     }
     
     func restoreSaveRunData() {
-        if MapVCViewModel.shared.loadRunData() {
-            setupAnnotation(coordinate: MapVCViewModel.shared.savedCoordinates!)
+        if MapViewModel.shared.checkIfRunDataExsists() {
+            MapViewModel.shared.loadRunData()
+            startCoordinates = MapViewModel.shared.savedCoordinates
+            setupAnnotation(coordinate: startCoordinates!)
         }
     }
     
     func resetMapVC() {
-        RunControlViewModel.shared.reset()
-        MapVCViewModel.shared.reset()
+        MapViewModel.shared.reset()
+        MapViewModel.shared.runInProgress = false
         controlView.reset()
         runView.mapView.removeAnnotations(runView.mapView.annotations)
         runView.mapView.removeAnnotations(runView.mapView.annotations)
@@ -113,18 +115,19 @@ extension MapVC: RunControlViewDelegate {
         guard let startCoordinates = LocationServices.shared.currentLocation else { return }
             setupAnnotation(coordinate: startCoordinates)
         self.startCoordinates = startCoordinates
-        MapVCViewModel.shared.saveRunData(withCoordinates: startCoordinates)
-        MapVCViewModel.shared.runInProgress = true
+        MapViewModel.shared.saveRunData(withCoordinates: startCoordinates)
+        MapViewModel.shared.runInProgress = true
         
     }
     
     func runDidEnd() {
         guard let endCoordinates = LocationServices.shared.currentLocation else { return }
-        
+        guard let startCoordinates = startCoordinates else { return }
+    
         setupAnnotation(coordinate: endCoordinates)
         self.endCoordinates = endCoordinates
-        MapVCViewModel.shared.runInProgress = false
-        showRunRoute(startCoordinates: startCoordinates!, endCoordinates: endCoordinates) { [unowned self] runDistance in
+        MapViewModel.shared.runInProgress = false
+        showRunRoute(startCoordinates: startCoordinates, endCoordinates: endCoordinates) { [unowned self] runDistance in
             guard let runDistance = runDistance else { return }
             
             self.controlView.shouldRunCompletionUI(beHidden: false)
@@ -140,6 +143,7 @@ extension MapVC: RunControlViewDelegate {
     func shareButtonTapped() {
         
         renderSnapShotOfMap { image in
+//            let appurl = URL(string: "runnermate://")!
             let activityItems: [Any] = ["Check out this run I just did!", image]
             let shareSheet = UIActivityViewController(activityItems: activityItems, applicationActivities: [])
             self.present(shareSheet, animated: true)

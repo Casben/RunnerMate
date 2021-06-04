@@ -107,7 +107,9 @@ class RunControlView: UIView {
         
         timerLabel.anchor(bottom: startButton.topAnchor, right: startButton.rightAnchor, paddingBottom: 8, paddingRight: 8)
         
+    
         RunControlViewModel.shared.loadTimeData()
+        
         configureNotificationObservers()
         shouldRunCompletionUI(beHidden: true)
     }
@@ -116,6 +118,7 @@ class RunControlView: UIView {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
     }
     
     func setupTimer() {
@@ -133,7 +136,6 @@ class RunControlView: UIView {
     func shouldRunCompletionUI(beHidden value: Bool) {
         distanceSegmentedControl.isHidden = value
         shareButton.isHidden = value
-        resetButton.isHidden = value
         distanceRanLabel.isHidden = value
         
         startButton.isEnabled = value
@@ -168,11 +170,11 @@ class RunControlView: UIView {
                 RunControlViewModel.shared.timer.invalidate()
             }
             delegate?.runDidEnd()
-            print("timer stopped and call delegate to finish run")
         }
     }
     
     @objc private func resetButtonTapped() {
+        RunControlViewModel.shared.reset()
         timerLabel.setStartingPositionText()
         startButton.isInStartingPosition = true
         shouldRunCompletionUI(beHidden: true)
@@ -203,18 +205,19 @@ class RunControlView: UIView {
         }
     }
     
-    @objc private func applicationDidenterBackground(_ notification: Notification) {
+    @objc private func applicationDidenterBackground() {
         if !RunControlViewModel.shared.timerIsRunning {
             DispatchQueue.main.async {
                 RunControlViewModel.shared.timer.invalidate()
             }
             RunControlViewModel.shared.ellapsedTime = 0
             RunControlViewModel.shared.timerIsRunning = false
+            RunControlViewModel.shared.saveTimeData()
         }
         
     }
     
-    @objc private func applicationDidBecomeActive(_ notification: Notification) {
+    @objc private func applicationDidBecomeActive() {
         if RunControlViewModel.shared.timerIsRunning {
             RunControlViewModel.shared.ellapsedTime = 0
             RunControlViewModel.shared.count = 0
@@ -227,8 +230,10 @@ class RunControlView: UIView {
 
 extension RunControlView: RunControlViewModelDelegate {
     func notifyTimeHasBeenRestored() {
-        timerLabel.text = RunControlViewModel.shared.timeString
-        startButton.isInStartingPosition = false
-        setupTimer()
+        if MapViewModel.shared.checkIfRunDataExsists() {
+            timerLabel.text = RunControlViewModel.shared.timeString
+            startButton.isInStartingPosition = false
+            setupTimer()
+        }
     }
 }

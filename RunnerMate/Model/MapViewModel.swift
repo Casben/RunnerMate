@@ -8,9 +8,9 @@
 import Foundation
 import CoreLocation
 
-class MapVCViewModel {
+class MapViewModel {
     
-    static let shared = MapVCViewModel()
+    static let shared = MapViewModel()
     var savedCoordinates: CLLocationCoordinate2D?
     var runInProgress: Bool?
     
@@ -22,9 +22,14 @@ class MapVCViewModel {
         userDefaults.setValue(longitude, forKey: UserDefaultsKeys.longitude)
     }
     
-    func loadRunData() -> Bool {
-        guard let latitude = userDefaults.object(forKey: UserDefaultsKeys.latitude), let longitude = userDefaults.object(forKey: UserDefaultsKeys.longitude) else { return false }
+    func loadRunData() {
+        guard let latitude = userDefaults.object(forKey: UserDefaultsKeys.latitude), let longitude = userDefaults.object(forKey: UserDefaultsKeys.longitude) else { return }
         savedCoordinates = CLLocationCoordinate2D(latitude: latitude as! CLLocationDegrees, longitude: longitude as! CLLocationDegrees)
+        runInProgress = true
+    }
+    
+    func checkIfRunDataExsists() -> Bool {
+        guard (userDefaults.object(forKey: UserDefaultsKeys.latitude) != nil) && (userDefaults.object(forKey: UserDefaultsKeys.longitude) != nil) else { return false }
         return true
     }
     
