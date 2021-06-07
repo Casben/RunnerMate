@@ -9,8 +9,12 @@ import UIKit
 
 class TimerLabel: UILabel {
     
+    //MARK: - Properties
+    
     private let startingPositionText = "00 : 00 : 00"
 
+    //MARK: - Lifecycle
+    
     init() {
         super.init(frame: .zero)
         configure()
@@ -19,6 +23,8 @@ class TimerLabel: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Methods
     
     func configure() {
         font = UIFont.systemFont(ofSize: 16)

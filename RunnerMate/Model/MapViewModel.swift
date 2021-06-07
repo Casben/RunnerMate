@@ -10,9 +10,13 @@ import CoreLocation
 
 class MapViewModel {
     
+    //MARK: - Properties
+    
     static let shared = MapViewModel()
     var savedCoordinates: CLLocationCoordinate2D?
     var runInProgress: Bool?
+    
+    //MARK: - Methods
     
     func saveRunData(withCoordinates coordinates: CLLocationCoordinate2D) {
         let latitude = coordinates.latitude

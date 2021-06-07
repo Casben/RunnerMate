@@ -7,6 +7,8 @@
 
 import UIKit
 
+//MARK: - RunControlViewDelegate
+
 protocol RunControlViewDelegate: AnyObject {
     func runDidBegin()
     func runDidEnd()
@@ -16,13 +18,15 @@ protocol RunControlViewDelegate: AnyObject {
 
 class RunControlView: UIView {
     
-    let startButton: StartButton = {
+    //MARK: - Properties
+    
+    private let startButton: StartButton = {
         let button = StartButton(type: .system)
         button.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
         return button
     }()
     
-    let distanceSegmentedControl: UISegmentedControl = {
+    private let distanceSegmentedControl: UISegmentedControl = {
         let control = UISegmentedControl(items: ["Miles", "Kilometers"])
         control.backgroundColor = .systemIndigo
         control.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.white], for: .normal)
@@ -32,12 +36,9 @@ class RunControlView: UIView {
         return control
     }()
     
-    let distanceRanLabel: UILabel = {
-        let label = UILabel()
-        return label
-    }()
+    private let distanceRanLabel = UILabel()
     
-    let shareButton: UIButton = {
+    private let shareButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "square.and.arrow.up"), for: .normal)
         button.tintColor = .systemIndigo
@@ -45,7 +46,7 @@ class RunControlView: UIView {
         return button
     }()
     
-    let resetButton: UIButton = {
+    private let resetButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(systemName: "arrow.clockwise"), for: .normal)
         button.tintColor = .systemIndigo
@@ -53,14 +54,14 @@ class RunControlView: UIView {
         return button
     }()
     
-    let runTimeLabel: UILabel = {
+    private let runTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "Run Time:"
         label.font = UIFont.boldSystemFont(ofSize: 26)
         return label
     }()
     
-    let timerLabel: TimerLabel = {
+    private let timerLabel: TimerLabel = {
         let label = TimerLabel()
 
         if let storedTime = RunControlViewModel.shared.confiugreTimerLabelWithStoredTime(), storedTime.isEmpty == false  {
@@ -71,8 +72,10 @@ class RunControlView: UIView {
     
     weak var delegate: RunControlViewDelegate?
     
-    var runDistanceInMiles: Double?
-    var runDistancecInKilometers: Double?
+    private var runDistanceInMiles: Double?
+    private var runDistancecInKilometers: Double?
+    
+    //MARK: - Lifecycle
     
     init() {
         super.init(frame: .zero)
@@ -82,6 +85,8 @@ class RunControlView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Methods
     
     private func configure() {
         RunControlViewModel.shared.delegate = self
@@ -114,14 +119,14 @@ class RunControlView: UIView {
         shouldRunCompletionUI(beHidden: true)
     }
     
-    func configureNotificationObservers() {
+    private func configureNotificationObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidenterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
         
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         
     }
     
-    func setupTimer() {
+    private func setupTimer() {
         DispatchQueue.main.async {
             RunControlViewModel.shared.timer.invalidate()
             RunControlViewModel.shared.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(self.updateTimerLabel), userInfo: nil, repeats: true)
@@ -150,6 +155,8 @@ class RunControlView: UIView {
         distanceRanLabel.text = "You ran \(miles) miles."
     }
     
+    //MARK: - Actions
+    
     @objc private func startButtonTapped() {
         switch startButton.isInStartingPosition {
         case true:
@@ -177,7 +184,7 @@ class RunControlView: UIView {
         delegate?.resetButtonTapped()
     }
     
-    @objc func shareButtonTapped() {
+    @objc private func shareButtonTapped() {
         delegate?.shareButtonTapped()
     }
     
@@ -223,6 +230,8 @@ class RunControlView: UIView {
         }
     }
 }
+
+//MARK: - RunControlViewModelDelegate
 
 extension RunControlView: RunControlViewModelDelegate {
     func notifyTimeHasBeenRestored() {

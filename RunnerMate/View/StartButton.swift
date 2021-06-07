@@ -8,6 +8,8 @@
 import UIKit
 
 class StartButton: UIButton {
+    
+    //MARK: - Properties
 
     private let startText: NSMutableAttributedString = {
         let attachment = NSTextAttachment()
@@ -43,6 +45,8 @@ class StartButton: UIButton {
         }
     }
     
+    //MARK: - Lifecycle
+    
     init(type: ButtonType) {
         super.init(frame: .zero)
         configure()
@@ -51,6 +55,8 @@ class StartButton: UIButton {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //MARK: - Methods
     
     private func configure() {
         layer.cornerRadius = 20

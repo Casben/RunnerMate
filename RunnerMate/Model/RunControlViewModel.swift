@@ -9,11 +9,15 @@ import Foundation
 
 typealias Time = (Int, Int, Int)
 
+//MARK: - RunControlViewModelDelegate
+
 protocol RunControlViewModelDelegate: AnyObject {
     func notifyTimeHasBeenRestored()
 }
 
 class RunControlViewModel {
+    
+    //MARK: - Properties
     
     static let shared = RunControlViewModel()
     
@@ -37,6 +41,8 @@ class RunControlViewModel {
     }
     
     weak var delegate: RunControlViewModelDelegate?
+    
+    //MARK: - Methods
     
     func secondsToHoursMinutesSeconds() {
         time = ((count / 3600), ((count % 3600) / 60), ((count % 3600) % 60))
@@ -69,7 +75,6 @@ class RunControlViewModel {
     func loadTimeData() {
         guard let storedString = userDefaults.string(forKey: UserDefaultsKeys.timeStringKey) else { return }
         guard storedString.isEmpty == false else { return }
-        print("stored string is \(storedString)")
         timeString = storedString
         restoreTime(with: storedString)
     }

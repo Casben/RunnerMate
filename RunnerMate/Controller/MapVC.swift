@@ -10,14 +10,17 @@ import MapKit
 
 class MapVC: UIViewController {
     
+    //MARK: - Properties
+    
     let runView = RunView()
     let controlView = RunControlView()
     
     var runnerAnnotation: Runner?
     var startCoordinates: CLLocationCoordinate2D?
     var endCoordinates: CLLocationCoordinate2D?
-    var route: MKRoute?
 
+    //MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkLocationAuthStatus()
@@ -25,6 +28,8 @@ class MapVC: UIViewController {
     }
 
 
+    //MARK: - Methods
+    
     func configure() {
         view.backgroundColor = .systemBackground
         view.addSubview(runView)
@@ -58,6 +63,8 @@ class MapVC: UIViewController {
         runView.mapView.overlays.forEach { runView.mapView.removeOverlay($0) }
     }
 }
+
+//MARK: - MKMapviewDelegate
 
 extension MapVC: MKMapViewDelegate {
     
@@ -104,12 +111,16 @@ extension MapVC: MKMapViewDelegate {
     }
 }
 
+//MARK: - CustomUserlocationDelegate
+
 extension MapVC: CustomUserLocationDelegate {
     
     func userLocationUpdated(location: CLLocation) {
         centerMapOnUserLocation(coordinates: location.coordinate)
     }
 }
+
+//MARK: - RunControlViewDelegate
 
 extension MapVC: RunControlViewDelegate {
     
@@ -157,6 +168,8 @@ extension MapVC: RunControlViewDelegate {
     
 }
 
+//MARK: - Render runner route methods
+
 extension MapVC {
     
     func showRunRoute(startCoordinates: CLLocationCoordinate2D, endCoordinates: CLLocationCoordinate2D, completion: @escaping (CLLocationDistance?) -> Void) {
@@ -172,7 +185,6 @@ extension MapVC {
             if let route = response?.routes.first {
                 self.runView.mapView.addOverlay(route.polyline)
                 self.runView.mapView.setVisibleMapRect(route.polyline.boundingMapRect, edgePadding: UIEdgeInsets(top: 200, left: 50, bottom: 50, right: 50), animated: true)
-                self.route = route
                 completion(route.distance)
                 
             } else {

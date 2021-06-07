@@ -9,6 +9,8 @@ import UIKit
 import MapKit
 
 class RunView: UIView {
+    
+    //MARK: - Properties
 
     let mapView = MKMapView()
     
@@ -17,6 +19,8 @@ class RunView: UIView {
             mapView.delegate = delegate
         }
     }
+    
+    //MARK: - Lifecycle
     
     init() {
         super.init(frame: .zero)
