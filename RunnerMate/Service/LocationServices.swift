@@ -14,6 +14,8 @@ protocol CustomUserLocationDelegate {
 
 class LocationServices: NSObject, CLLocationManagerDelegate {
     
+    //MARK: - Properties
+    
     static let shared = LocationServices()
     
     var delegate: CustomUserLocationDelegate?
@@ -21,13 +23,17 @@ class LocationServices: NSObject, CLLocationManagerDelegate {
     var locationManger = CLLocationManager()
     var currentLocation: CLLocationCoordinate2D?
     
+    //MARK: - Lifecycle
+    
     override init() {
         super.init()
         self.locationManger.delegate = self
         self.locationManger.desiredAccuracy = kCLLocationAccuracyBest
-        self.locationManger.distanceFilter = 5
+        self.locationManger.distanceFilter = 10
         self.locationManger.startUpdatingLocation()
     }
+    
+    //MARK: - Methods
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.currentLocation = manager.location?.coordinate

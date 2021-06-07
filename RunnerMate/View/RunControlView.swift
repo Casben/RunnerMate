@@ -174,10 +174,6 @@ class RunControlView: UIView {
     }
     
     @objc private func resetButtonTapped() {
-        RunControlViewModel.shared.reset()
-        timerLabel.setStartingPositionText()
-        startButton.isInStartingPosition = true
-        shouldRunCompletionUI(beHidden: true)
         delegate?.resetButtonTapped()
     }
     

@@ -50,6 +50,8 @@ class MapVC: UIViewController {
     func resetMapVC() {
         MapViewModel.shared.reset()
         MapViewModel.shared.runInProgress = false
+        RunControlViewModel.shared.reset()
+        controlView.shouldRunCompletionUI(beHidden: true)
         controlView.reset()
         runView.mapView.removeAnnotations(runView.mapView.annotations)
         runView.mapView.removeAnnotations(runView.mapView.annotations)
@@ -143,10 +145,11 @@ extension MapVC: RunControlViewDelegate {
     func shareButtonTapped() {
         
         renderSnapShotOfMap { image in
-//            let appurl = URL(string: "runnermate://")!
             let activityItems: [Any] = ["Check out this run I just did!", image]
             let shareSheet = UIActivityViewController(activityItems: activityItems, applicationActivities: [])
-            self.present(shareSheet, animated: true)
+            self.present(shareSheet, animated: true) {
+                self.resetMapVC()
+            }
         }
         
         
