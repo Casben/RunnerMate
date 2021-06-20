@@ -20,17 +20,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
     
-    
-//    func sceneWillResignActive(_ scene: UIScene) {
-//        RunControlViewModel.shared.timer.invalidate()
-//        RunControlViewModel.shared.saveTimeData()
-//    }
-    
-    
-//    func sceneDidEnterBackground(_ scene: UIScene) {
-//        RunControlViewModel.shared.timer.invalidate()
-//        RunControlViewModel.shared.saveTimeData()
-//    }
     func sceneDidDisconnect(_ scene: UIScene) {
         RunControlViewModel.shared.saveTimeData()
     }
@@ -40,13 +29,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             RunControlViewModel.shared.loadTimeData()
         }
     }
-    
-//    func sceneDidBecomeActive(_ scene: UIScene) {
-//        if MapViewModel.shared.checkIfRunDataExsists() {
-//            RunControlViewModel.shared.loadTimeData()
-//        }
-//
-//    }
 
 }
 
