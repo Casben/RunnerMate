@@ -91,8 +91,7 @@ class RunControlView: UIView {
     private func configure() {
         RunControlViewModel.shared.delegate = self
         addRoundedCornerAndShadow()
-        backgroundColor = UIColor(white: 1, alpha: 0.8)
-        alpha = 0.75
+        backgroundColor = UIColor(white: 1, alpha: 0.75)
         
         addSubviews(distanceSegmentedControl, resetButton, shareButton, distanceRanLabel, startButton, runTimeLabel, timerLabel)
         
